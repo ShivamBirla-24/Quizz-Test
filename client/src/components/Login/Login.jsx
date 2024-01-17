@@ -1,0 +1,74 @@
+import { useState } from "react";
+import styles from "./Login.module.css";
+import axios from 'axios';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+const Login = () => {
+  const API_ROOT_URL = "http://localhost:3000";
+  const navigate = useNavigate()
+
+  const [formData, setformData] = useState({
+    email: "",
+    password:""
+  })
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformData({
+      ...formData,
+      [name]:value
+    })
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.post(API_ROOT_URL + "/api/auth/login", formData);
+      if (response.status === 200) {
+          toast.success(response.data.message, {
+            position: "top-center",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        //navigate to the dashboard
+         navigate("/dashboard")
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+
+  return (
+    <div className={styles.form_div}>
+      <div className={styles.input_div}>
+        <label htmlFor="email">Email</label>
+        <input type="text" name="email" id="email" onChange={handleChange}/>
+      </div>
+      <div className={styles.input_div}>
+        <label htmlFor="password">Password</label>
+        <input type="password" name="password" id="password" onChange={handleChange} />
+      </div>
+      <div className={styles.btn_div}>
+        <button onClick={handleLogin}>Login</button>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
