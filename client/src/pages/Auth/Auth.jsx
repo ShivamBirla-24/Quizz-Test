@@ -9,7 +9,7 @@ const Auth = () => {
   return (
     <div className={styles.body_container}>
       <div className={styles.main_container}>
-        <h1>QUIZZIE</h1>
+        <h1 className={styles.h1_tag}>QUIZZIE</h1>
         <div className={styles.Signup_login}>
           <div
             className={!loginClicked ? styles.button_highlight : ""}
