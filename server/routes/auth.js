@@ -31,16 +31,16 @@ router.post("/signup", async (req, res) => {
     const encPassword = await bcrypt.hash(password, 10);
 
     //creating the user filled data when user is not present
-    await User.create({ name, email, password: encPassword });
+    const user = await User.create({ name, email, password: encPassword });
 
     //token generated
-    const token = jwt.sign({ userEmail: email }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
 
     //return success message
     res.status(200).json({
       message: "Sign up successfully",
-      userEmail: email,
-      token
+      user,
+      token,
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -79,12 +79,12 @@ router.post("/login", async (req, res) => {
     }
 
     //token generated
-    const token = jwt.sign({ userEmail: email }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
 
     //sending response after successfull login
     res.status(200).json({
       message: "Logged in successfully!!",
-      userEmail: email,
+      user,
       token,
     });
   } catch (error) {

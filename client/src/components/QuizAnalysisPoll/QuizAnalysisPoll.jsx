@@ -16,15 +16,19 @@ const QuizAnalysisPoll = () => {
           <div className={styles.options_container}>
             <div>
               <h1>60</h1>
-              <p>People Attempted the question</p>
+              <p>Option 1</p>
             </div>
             <div>
               <h1>38</h1>
-              <p>People Answered Correctly</p>
+              <p>Option 2</p>
             </div>
             <div>
               <h1>22</h1>
-              <p>People Answered Incorrectly</p>
+              <p>Option 3</p>
+            </div>
+            <div>
+              <h1>50</h1>
+              <p>Option 4</p>
             </div>
           </div>
           <hr style={{ border: "1px solid #D7D7D7" }} />

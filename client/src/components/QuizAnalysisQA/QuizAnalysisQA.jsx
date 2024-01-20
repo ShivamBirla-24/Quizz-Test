@@ -16,19 +16,15 @@ const QuizAnalysisQA = () => {
           <div className={styles.options_container}>
             <div>
               <h1>60</h1>
-              <p>Option 1</p>
+              <p>People Attempted the question</p>
             </div>
             <div>
               <h1>38</h1>
-              <p>Option 2</p>
+              <p>People Answered Correctly</p>
             </div>
             <div>
               <h1>22</h1>
-              <p>Option 3</p>
-            </div>
-            <div>
-              <h1>50</h1>
-              <p>Option 4</p>
+              <p>People Answered Incorrectly</p>
             </div>
           </div>
           <hr style={{ border: "1px solid #D7D7D7" }} />
@@ -36,6 +32,6 @@ const QuizAnalysisQA = () => {
       </div>
     </div>
   );
-}
+};
 
 export default QuizAnalysisQA;

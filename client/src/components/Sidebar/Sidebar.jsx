@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Sidebar.module.css";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-const Sidebar = ({click}) => {
+const Sidebar = ({ click }) => {
   const navigate = useNavigate();
   const [isClicked, setisClicked] = useState(click);
 
@@ -16,9 +16,7 @@ const Sidebar = ({click}) => {
   const handleClick = (e) => {
     const { id } = e.target;
     setisClicked(id);
-    if (id == "dashboard" || id == "analytics") {
-      navigate(`/${id}`);
-    }
+    navigate(`/${id}`,{state:{click:id}});
   };
 
   return (
@@ -66,6 +64,5 @@ const Sidebar = ({click}) => {
 Sidebar.propTypes = {
   click: PropTypes.string.isRequired,
 };
-
 
 export default Sidebar;

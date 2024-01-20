@@ -11,12 +11,17 @@ dotenv.config();
 //importing register and login route
 const authRoutes = require("./routes/auth");
 
+//
+const quizRoutes = require("./routes/quiz");
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //mouting login and register routes
 app.use("/api/auth", authRoutes);
+
+app.use("/api/quiz", quizRoutes);
 
 //Checking Health Route  
 app.get("/", (req, res) => {
