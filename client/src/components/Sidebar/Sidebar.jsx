@@ -9,7 +9,6 @@ const Sidebar = ({ click }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("userEmail");
     navigate("/");
   };
 

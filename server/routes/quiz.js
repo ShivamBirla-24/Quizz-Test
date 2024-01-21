@@ -6,17 +6,17 @@ const questionSchema = require("../db_models/question.model");
 
 //api for creating the quiz
 router.post("/createquiz", isLoggedin, async (req, res) => {
-  const { quizname, quiztype, userId, questions } = req.body;
+  const { quizname, quiztype, createdby, questions } = req.body;
 
   try {
-    if (!quizname || !quiztype || !userId || !questions) {
+    if (!quizname || !quiztype || !questions) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const newquiz = await new quizSchema({
       quizname,
       quiztype,
-      createdby: userId,
+      createdby,
     });
 
     if (questions) {
@@ -26,7 +26,6 @@ router.post("/createquiz", isLoggedin, async (req, res) => {
           options: question.options,
           timer: question.timer,
         });
-        await newquestion.save();
         newquiz.questions.push(newquestion);
       }
     }
@@ -45,17 +44,62 @@ router.post("/createquiz", isLoggedin, async (req, res) => {
   }
 });
 
+//api for getting trending quizzes
+router.get("/trendingquizzes", isLoggedin, async (req, res) => {
+  try {
+      const { createdby } = req.body;
 
-//api for getting all the quizzes user made
+     const trendingQuizzes = await quizSchema.find({ createdby, impression: { $gte: 10 } }).sort({ impression: -1 });
+
+  if (!trendingQuizzes) {
+    return res.status(404).json({ message: "No trending quizzes" });
+  }
+  return res.send(trendingQuizzes);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"Internal Server Error"})
+  }
+});
+
+
+//api for get all quizzes data
 router.get("/getallquizzes", isLoggedin, async (req, res) => {
-    const { userId } = req.body;
-    const allQuizzes = await quizSchema.find({ createdby: userId });
-    if (!allQuizzes) {
-        return res.status(404).json({message:"Create Quizzes First"})
-    }
-    return res.send(allQuizzes);
+  try {
+    const { createdby } = req.body;
+
+  const allQuizzes = await quizSchema.find({ createdby });
+  if (!allQuizzes) {
+    return res.status(404).json({ message: "Create Quiz Please" });
+  }
+  return res.send(allQuizzes);
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"Internal Server Error"})
+  }
 })
 
-
+//api for deleting a quiz
+router.delete("/delete/:id", isLoggedin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+  if(!id){
+    return res.status(404).json({
+      message:"No quiz found"
+    })
+  }
+  const deletedUser = await quizSchema.findByIdAndDelete(id);
+  return res.status(200).json({
+    message: "Quiz deleted successfully",
+    deletedUser
+  })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message:"Internal Server Error"
+    })
+  }
+})
 
 module.exports = router;

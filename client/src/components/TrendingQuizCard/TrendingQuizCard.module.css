@@ -1,14 +1,13 @@
-*{
-    margin:0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.main_container{
-    width: 24%;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: white;
-    height: 20%;
-    margin-top: 1.2%;
+.main_container {
+  width: 24%;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: white;
+  height: 20%;
+  margin-top: 1.2%;
 }
-

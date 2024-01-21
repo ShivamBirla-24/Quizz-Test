@@ -34,12 +34,11 @@ router.post("/signup", async (req, res) => {
     const user = await User.create({ name, email, password: encPassword });
 
     //token generated
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY);
 
     //return success message
     res.status(200).json({
       message: "Sign up successfully",
-      user,
       token,
     });
   } catch (error) {
@@ -79,12 +78,11 @@ router.post("/login", async (req, res) => {
     }
 
     //token generated
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY);
 
     //sending response after successfull login
     res.status(200).json({
       message: "Logged in successfully!!",
-      user,
       token,
     });
   } catch (error) {

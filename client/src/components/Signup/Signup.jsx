@@ -83,7 +83,6 @@ const Signup = () => {
 
                  //saving token in local stoarge
                  localStorage.setItem("token", response.data.token);
-                 localStorage.setItem("userEmail", response.data.userEmail);
                  
                  //toast message for succussfull signup
                  toast.success(response.data.message, {

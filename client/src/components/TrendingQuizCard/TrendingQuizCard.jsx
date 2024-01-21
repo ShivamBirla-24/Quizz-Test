@@ -1,7 +1,9 @@
 import styles from "./TrendingQuizCard.module.css";
 import eyeImage from "../../images/eye.svg";
+import PropTypes from "prop-types";
+import formatDate from "../../utils.functions/date";
 
-const TrendingQuizCard = () => {
+const TrendingQuizCard = ({ quizname, impression, createdAt }) => {
   return (
     <div className={styles.main_container}>
       <div
@@ -11,18 +13,34 @@ const TrendingQuizCard = () => {
           justifyContent: "space-between",
         }}
       >
-        <span style={{ fontSize: "x-large", fontWeight: "600" }}>Quiz1</span>
-        <span style={{ color: "#FF5D01" , display:"flex" , alignItems:"center",gap:"3px", fontSize:"small"}}>
-          667 <img src={eyeImage} alt="eye icon" />
+        <span style={{ fontSize:"21px", fontWeight: "600"}}>
+          {quizname}
+        </span>
+        <span
+          style={{
+            color: "#FF5D01",
+            display: "flex",
+            alignItems: "center",
+            gap: "3px",
+            fontSize: "small",
+          }}
+        >
+          {impression} <img src={eyeImage} alt="eye icon" />
         </span>
       </div>
       <div>
         <span style={{ fontSize: "small", color: "#60B84B" }}>
-          Created on : 04 Sep, 2023
+          Created on :{" "+formatDate(createdAt.toString().slice(0, 10).split("-").reverse().join("-"))}
         </span>
       </div>
     </div>
   );
-}
+};
+
+TrendingQuizCard.propType = {
+  quizname: PropTypes.string.isRequired,
+  impression: PropTypes.number.isRequired,
+  createdAt: PropTypes.string.isRequired,
+};
 
 export default TrendingQuizCard;
