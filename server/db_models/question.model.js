@@ -6,14 +6,11 @@ const questionSchema = new mongoose.Schema({
     {
       optionText: String,
       optionImage: String,
-      isCorrect: Boolean,
-      count: Number,
+      count: { type: Number, default: 0 },
     },
   ],
-  selectedOption: { type: String },
-  timer: { type: Number, default: 0 },
+  correctoptionindex: { type: Number, required: true },
   correct: { type: Number, default: 0 },
-  incorrect: { type: Number, default: 0 },
 });
 
-module.exports = mongoose.model("questionSchema", questionSchema);
+module.exports = mongoose.model("question", questionSchema);

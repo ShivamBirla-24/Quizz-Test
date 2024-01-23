@@ -11,6 +11,7 @@ import shareicon from "../../images/share.svg";
 
 const Analytics = () => {
   const [allQuizzes, setallQuizzes] = useState([]);
+  const [deleteId, setdeleteId] = useState("");
   const [deletequizPopup, setdeletequizPopup] = useState(false);
   const token = localStorage.getItem("token");
 
@@ -39,23 +40,8 @@ const Analytics = () => {
   }
 
   const handleDelete = async (e) => {
-    // try {
-    //   const response = await axios.delete(
-    //     `http://localhost:3000/api/quiz/delete/${e.target.id}`,
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Accept: "application/json",
-    //         token,
-    //       },
-    //     }
-    //   );
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    console.log(e);
     setdeletequizPopup(true);
+    setdeleteId(e.target.id)
   }
 
   const handleShare = (e) => {
@@ -65,24 +51,22 @@ const Analytics = () => {
 
   return (
     <>
-      <div
-        className={`${styles.main_container} ${
-          deletequizPopup && styles.popup_background
-        }`}
-      >
+      <div className={styles.main_container}>
         <Sidebar click="analytics" />
         <div className={styles.analytics_container}>
           <h1 className={styles.h1_tag}>Quiz Analysis</h1>
           <div className={styles.quiztable_container}>
             <table>
-              <tr>
-                <th>S.No</th>
-                <th>Quiz Name</th>
-                <th>Created On</th>
-                <th>Impression</th>
-                <th></th>
-                <th></th>
-              </tr>
+              {allQuizzes.length && (
+                <tr>
+                  <th>S.No</th>
+                  <th>Quiz Name</th>
+                  <th>Created On</th>
+                  <th>Impression</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              )}
               {allQuizzes.map((quiz, index) => {
                 return (
                   <tr key={index}>
@@ -139,7 +123,12 @@ const Analytics = () => {
           </div>
         </div>
 
-        {deletequizPopup && <Deletepopup />}
+        {deletequizPopup && (
+          <Deletepopup
+            deleteId={deleteId}
+            setdeletequizPopup={setdeletequizPopup}
+          />
+        )}
       </div>
     </>
   );

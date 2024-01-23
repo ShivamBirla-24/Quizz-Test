@@ -1,15 +1,29 @@
 import styles from "./CreateQuiz.module.css";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import Createquizpopup from "../../components/Createquizpopup/Createquizpopup.jsx";
+import QuestionsPopup from "../../components/QuestionsPopup/QuestionsPopup.jsx";
+import SharePopup  from "../../components/SharePopup/SharePopup.jsx";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState} from "react";
+import QuizContextProvider from "../../context/createquizcontext/QuizContextProvider.jsx";
 
 const CreateQuiz = () => {
   const navigate = useNavigate();
-  const [createquizPopup, setcreatequizPopup] = useState(true);
-  const [quizData, setquizData] = useState({});
+  const [createquizPopup, setcreatequizPopup] = useState();
+  const [createquestionsPopup, setcreatequestionsPopup] = useState();
+  const [sharePopup, setsharePopup] = useState(false);
+  const edit = false;
+  
+  useEffect(() => {
+    if (edit) {
+      setcreatequizPopup(false);
+      setcreatequestionsPopup(true);
+    } else {
+      setcreatequizPopup(true);
+      setcreatequestionsPopup(false);
+    }
 
-  const [createquestionsPopup, setcreatequestionsPopup] = useState(false);
+  },[edit])
 
   const handleOutsidePopup = () => {
     setcreatequizPopup(true);
@@ -20,11 +34,17 @@ const CreateQuiz = () => {
   return (
     <div className={styles.main_container} onClick={handleOutsidePopup}>
       <Sidebar click="createquiz" />
-      {createquizPopup ? (
-        <Createquizpopup quizData={quizData} setquizData={setquizData} />
-      ) : (
-        ""
-      )}
+      <QuizContextProvider>
+        {createquizPopup &&
+          <Createquizpopup
+            setcreatequizPopup={setcreatequizPopup}
+            setcreatequestionsPopup={setcreatequestionsPopup}
+          />}
+
+        {createquestionsPopup && <QuestionsPopup setsharePopup={setsharePopup} setcreatequestionsPopup={setcreatequestionsPopup} setcreatequizPopup={setcreatequizPopup} />}
+
+        {sharePopup && <SharePopup/>}
+      </QuizContextProvider>
     </div>
   );
 };
