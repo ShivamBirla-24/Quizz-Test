@@ -1,7 +1,7 @@
 import styles from "./Analytics.module.css";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import Deletepopup from "../../components/Deletepopup/Deletepopup.jsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import formatDate from "../../utils.functions/date";
@@ -14,6 +14,7 @@ const Analytics = () => {
   const [deleteId, setdeleteId] = useState("");
   const [deletequizPopup, setdeletequizPopup] = useState(false);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async function () {
@@ -36,7 +37,7 @@ const Analytics = () => {
   }, [allQuizzes, token]);
 
   const handleEdit = (e) => {
-    console.log(e.target.id);
+    navigate("/createquiz", { state: { edit: true, id: e.target.id } });
   }
 
   const handleDelete = async (e) => {

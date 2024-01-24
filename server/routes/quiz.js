@@ -6,7 +6,8 @@ const questionSchema = require("../db_models/question.model");
 
 //api for creating the quiz
 router.post("/createquiz", isLoggedin, async (req, res) => {
-  const { quizname, quiztype, createdby, questions, timer ,optiontype} = req.body;
+  const { quizname, quiztype, createdby, questions, timer, optiontype } =
+    req.body;
 
   try {
     if (!quizname || !quiztype || !questions || !optiontype) {
@@ -18,21 +19,9 @@ router.post("/createquiz", isLoggedin, async (req, res) => {
       quiztype,
       createdby,
       timer,
-      optiontype
+      optiontype,
+      questions,
     });
-
-    if (questions) {
-      for (const question of questions) {
-        const newquestion = await new questionSchema({
-          questiontext: question.questiontext,
-          options: question.options,
-          correctoptionindex:question.correctoptionindex
-        });
-        newquiz.questions.push(newquestion);
-      }
-    } else {
-      return res.json({ message: "No questions assigned" });
-    }
 
     await newquiz.save();
 
@@ -40,6 +29,46 @@ router.post("/createquiz", isLoggedin, async (req, res) => {
       message: "Quiz created successfully",
       newquiz,
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+});
+
+//api for editing the quiz
+router.patch("/editquiz/:id", isLoggedin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { questions, timer, optiontype } = req.body;
+    if (!questions || !optiontype) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+
+    const updatequiz = {
+      optiontype,
+      timer,
+      questions,
+    };
+
+    const editedquiz = await quizSchema.findByIdAndUpdate(id, updatequiz, {
+      new: true,
+      runValidators: true,
+    });
+    
+    if (editedquiz) {
+      return res.status(200).json({
+        message: "Quiz Edited Successfully",
+        editedquiz,
+      });
+    } else {
+      return res.status(404).json({
+        message: "Quiz Not Found",
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -112,16 +141,16 @@ router.get("/getaquiz/:id", async (req, res) => {
     const quiz = await quizSchema.findById(id);
     if (!quiz) {
       return res.status(404).json({
-        message:"Quiz Not Found"
-      })
+        message: "Quiz Not Found",
+      });
     }
-    res.status(200).json(quiz)
+    res.status(200).json(quiz);
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message:"Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-})
+});
 
 module.exports = router;

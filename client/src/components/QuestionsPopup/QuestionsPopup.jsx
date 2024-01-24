@@ -1,4 +1,4 @@
-import { useContext ,useState} from "react";
+import { useContext, useEffect, useState } from "react";
 import { Createquizcontext } from "../../context/createquizcontext/QuizContextProvider";
 import styles from "./QuestionsPopup.module.css";
 import deleteIcon from "../../images/delete.svg";
@@ -7,13 +7,50 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import PropTypes from "prop-types";
 
-const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPopup}) => {
+const QuestionsPopup = ({
+  setsharePopup,
+  setcreatequestionsPopup,
+  setcreatequizPopup,
+  editId,
+  editQuiz
+}) => {
   const navigate = useNavigate();
   const [selectedIndex, setselectedIndex] = useState(0);
   const token = localStorage.getItem("token");
 
   const QuizState = useContext(Createquizcontext);
-  const { quizData, setquizData ,setlinkId} = QuizState;
+  const { quizData, setquizData, setlinkId } = QuizState;
+
+  //useEffect for fetching data if edit is true
+  useEffect(() => {
+    (async () => {
+      if (editQuiz) {
+        if (editId) {
+          try {
+            const response = await axios.get(`http://localhost:3000/api/quiz/getaquiz/${editId}`)
+            if (response.status === 200) {
+              const data = response.data;
+              setquizData({ ...data })
+            }
+            else {
+              toast.warning("Quiz Not Found", {
+                position: "top-center",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
+    })()
+  },[editId,editQuiz,setquizData])
 
   //handling the state with index storing on question button click
   const handlequestionClick = (e) => {
@@ -204,14 +241,14 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
       if (
         !question.questiontext ||
         !(quizData.quiztype == "Poll" ? 1 : question.correctoptionindex) ||
-        !question.options.every((obj) => {
+        !question.options.every((option) => {
           if (quizData.optiontype === "text") {
-            return obj.optionText.trim() !== "";
+            return option.optionText.trim() !== "";
           } else if (quizData.optiontype === "imgurl") {
-            return obj.optionImage.trim() !== "";
+            return option.optionImage.trim() !== "";
           } else if (quizData.optiontype === "text&imgurl") {
             return (
-              obj.optionText.trim() !== "" && obj.optionImage.trim() !== ""
+              option.optionText.trim() !== "" && option.optionImage.trim() !== ""
             );
           }
         })
@@ -219,11 +256,6 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
         toast.error("All the question fields are required");
         return;
       }
-    }
-
-    if (!quizData.optiontype) {
-      toast.error("Option Type required");
-      return;
     }
 
     try {
@@ -252,13 +284,76 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
         setsharePopup(true);
         setcreatequestionsPopup(false);
         setcreatequizPopup(false);
-        setlinkId(`http://localhost:5173/quizexam/${response.data.newquiz._id}`)
+        setlinkId(
+          `http://localhost:5173/quizexam/${response.data.newquiz._id}`
+        );
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
   };
+
+  //edit quiz handler
+  const handleEditquiz = async() => {
+      for (const question of quizData.questions) {
+        if (
+          !question.questiontext ||
+          !(quizData.quiztype == "Poll" ? 1 : question.correctoptionindex) ||
+          !question.options.every((option) => {
+            if (quizData.optiontype === "text") {
+              return option.optionText.trim() !== "";
+            } else if (quizData.optiontype === "imgurl") {
+              return option.optionImage.trim() !== "";
+            } else if (quizData.optiontype === "text&imgurl") {
+              return (
+                option.optionText.trim() !== "" &&
+                option.optionImage.trim() !== ""
+              );
+            }
+          })
+        ){
+          toast.error("All the question fields are required");
+          return;
+        }
+      }
+      
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/api/quiz/editquiz/${editId}`,
+        quizData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            token,
+          },
+        }
+      );
+
+      if(response.status == 200){
+        toast.success(response.data.message, {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setcreatequizPopup(false)
+        setcreatequestionsPopup(false)
+        setsharePopup(true)
+        setlinkId(`http://localhost:5173/quizexam/${response.data.editedquiz._id}`)
+      }
+
+    }catch(error){
+      console.log(error);
+      toast.error(error.message);
+    }
+      
+  }
 
   const handleOutsidePopup = (e) => {
     e.stopPropagation();
@@ -319,7 +414,7 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
             value="text"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            checked={quizData.optiontype === "text"}
+            defaultChecked={quizData.optiontype == "text"}
           />
           <label htmlFor="optiontype">Text</label>
         </div>
@@ -331,7 +426,7 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
             value="imgurl"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            checked={quizData.optiontype === "imgurl"}
+            defaultChecked={quizData.optiontype == "imgurl"}
           />
           <label htmlFor="optiontype">Image Url</label>
         </div>
@@ -343,7 +438,7 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
             value="text&imgurl"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            checked={quizData.optiontype === "text&imgurl"}
+            defaultChecked={quizData.optiontype == "text&imgurl"}
           />
           <label htmlFor="optiontype">Text & Image Url</label>
         </div>
@@ -369,7 +464,7 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
                   name="correctoptionindex"
                   id={index}
                   onClick={correctoptionClick}
-                  checked={
+                  defaultChecked={
                     quizData.questions[selectedIndex].correctoptionindex ==
                     index
                   }
@@ -483,12 +578,17 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
         >
           Cancel
         </button>
-        <button
-          onClick={handleCreateQuiz}
-          style={{ backgroundColor: "#60B84B", color: "white" }}
-        >
-          Create Quiz
-        </button>
+
+        {
+          !editQuiz ?
+          (<button onClick={handleCreateQuiz} style={{ backgroundColor: "#60B84B", color: "white" }}>
+            Create Quiz
+          </button>) :
+          (<button onClick={handleEditquiz} style={{ backgroundColor: "#60B84B", color: "white" }}>
+            Edit Quiz
+          </button>)
+        }
+
       </div>
     </div>
   );
@@ -497,7 +597,9 @@ const QuestionsPopup = ({ setsharePopup, setcreatequestionsPopup,setcreatequizPo
 QuestionsPopup.propTypes = {
   setsharePopup: PropTypes.func.isRequired,
   setcreatequestionsPopup: PropTypes.func.isRequired,
-  setcreatequizPopup:PropTypes.func.isRequired
-}
+  setcreatequizPopup: PropTypes.func.isRequired,
+  editId: PropTypes.string,
+  editQuiz:PropTypes.bool
+};
 
 export default QuestionsPopup;

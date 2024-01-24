@@ -13,7 +13,7 @@ const TrendingQuizCard = ({ quizname, impression, createdAt }) => {
           justifyContent: "space-between",
         }}
       >
-        <span style={{ fontSize:"21px", fontWeight: "600"}}>
+        <span style={{ fontSize:"20px", fontWeight: "600"}}>
           {quizname}
         </span>
         <span
@@ -37,7 +37,7 @@ const TrendingQuizCard = ({ quizname, impression, createdAt }) => {
   );
 };
 
-TrendingQuizCard.propType = {
+TrendingQuizCard.propTypes = {
   quizname: PropTypes.string.isRequired,
   impression: PropTypes.number.isRequired,
   createdAt: PropTypes.string.isRequired,
