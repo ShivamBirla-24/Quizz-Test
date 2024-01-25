@@ -1,37 +1,47 @@
 import styles from "./QuizAnalysisQA.module.css";
+import PropTypes from "prop-types";
+import formatDate from "../../utils.functions/date.js";
 
-const QuizAnalysisQA = () => {
+const QuizAnalysisQA = ({quizData}) => {
   return (
     <div className={styles.main_container}>
       <div className={styles.quizname_heading_container}>
-        <h1>Quiz 2 Question Analysis</h1>
+        <h1>{quizData.quizname} Question Analysis</h1>
         <div>
-          <p>Created on:04 Sep,2023</p>
-          <p>Impressions:667</p>
+          <p>Created on: {formatDate(quizData.createdAt.slice(0, 10).split("-").reverse().join("-"))}</p>
+          <p>Impressions: {quizData.impression}</p>
         </div>
       </div>
       <div className={styles.questions_container}>
-        <div className={styles.question_div}>
-          <h2>Q.1 Question place holder for analysis ? </h2>
-          <div className={styles.options_container}>
-            <div>
-              <h1>60</h1>
-              <p>People Attempted the question</p>
+        {quizData.questions.map((question,index) => {
+          return (
+            <div className={styles.question_div} key={index}>
+            <h2>Q.{index+1} {question.questiontext} </h2>
+            <div className={styles.options_container}>
+              <div>
+                <h1>{quizData.impression}</h1>
+                <p>People Attempted the question</p>
+              </div>
+              <div>
+                <h1>{question.correct }</h1>
+                <p>People Answered Correctly</p>
+              </div>
+              <div>
+                <h1>{quizData.impression-question.correct}</h1>
+                <p>People Answered Incorrectly</p>
+              </div>
             </div>
-            <div>
-              <h1>38</h1>
-              <p>People Answered Correctly</p>
-            </div>
-            <div>
-              <h1>22</h1>
-              <p>People Answered Incorrectly</p>
-            </div>
+            <hr style={{ border: "1px solid #D7D7D7" }} />
           </div>
-          <hr style={{ border: "1px solid #D7D7D7" }} />
-        </div>
+          )
+        })}
       </div>
     </div>
   );
 };
+
+QuizAnalysisQA.propTypes = {
+   quizData:PropTypes.object.isRequired
+}
 
 export default QuizAnalysisQA;

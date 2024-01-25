@@ -32,18 +32,6 @@ const QuestionsPopup = ({
               const data = response.data;
               setquizData({ ...data })
             }
-            else {
-              toast.warning("Quiz Not Found", {
-                position: "top-center",
-                autoClose: 4000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
-            }
           } catch (error) {
             console.log(error);
           }

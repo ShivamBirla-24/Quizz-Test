@@ -52,11 +52,10 @@ const Analytics = () => {
       .then(() => {
       toast.success("Link Copied to Clipboard!")
       }).catch(() => {
-        toast.error("Error in copying the link");
+      toast.error("Error in copying the link");
     })
   }
-
-
+  
   return (
     <>
       <div className={styles.main_container}>
@@ -122,7 +121,7 @@ const Analytics = () => {
                       </td>
                     </span>
                     <td>
-                      <Link to="/quizanalysis">Question Wise Analysis</Link>
+                      <Link to="/quizanalysis" state={{id:quiz._id}}>Question Wise Analysis</Link>
                     </td>
                   </tr>
                 );
