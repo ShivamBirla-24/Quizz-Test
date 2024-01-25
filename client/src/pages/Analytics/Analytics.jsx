@@ -8,6 +8,7 @@ import formatDate from "../../utils.functions/date";
 import editicon from "../../images/edit.svg";
 import deleteicon from "../../images/delete.svg";
 import shareicon from "../../images/share.svg";
+import { toast } from "react-toastify";
 
 const Analytics = () => {
   const [allQuizzes, setallQuizzes] = useState([]);
@@ -46,7 +47,13 @@ const Analytics = () => {
   }
 
   const handleShare = (e) => {
-    console.log(e.target.id);
+    const { id } = e.target;
+    navigator.clipboard.writeText(`http://localhost:5173/quizexam/${id}`)
+      .then(() => {
+      toast.success("Link Copied to Clipboard!")
+      }).catch(() => {
+        toast.error("Error in copying the link");
+    })
   }
 
 
