@@ -1,10 +1,19 @@
 import styles from "./Auth.module.css";
 import Signup from "../../components/Signup/Signup";
 import Login from "../../components/Login/Login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [loginClicked, setloginClicked] = useState(false);
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  },[])
 
   return (
     <div className={styles.body_container}>
