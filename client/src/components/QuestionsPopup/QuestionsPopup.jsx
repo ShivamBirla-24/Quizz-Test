@@ -70,7 +70,7 @@ const QuestionsPopup = ({
           },
         ],
       }));
-      setselectedIndex(0);
+      setselectedIndex(prev=>prev+1);
     }
   };
 
@@ -287,7 +287,7 @@ const QuestionsPopup = ({
       for (const question of quizData.questions) {
         if (
           !question.questiontext ||
-          !(quizData.quiztype == "Poll" ? 1 : question.correctoptionindex) ||
+          !(quizData.quiztype == "Poll" ? 1 : (question.correctoptionindex==0 || question.correctoptionindex)) ||
           !question.options.every((option) => {
             if (quizData.optiontype === "text") {
               return option.optionText.trim() !== "";
@@ -402,7 +402,7 @@ const QuestionsPopup = ({
             value="text"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            defaultChecked={quizData.optiontype == "text"}
+            checked={quizData.optiontype == "text"}
           />
           <label htmlFor="optiontype">Text</label>
         </div>
@@ -414,7 +414,7 @@ const QuestionsPopup = ({
             value="imgurl"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            defaultChecked={quizData.optiontype == "imgurl"}
+            checked={quizData.optiontype == "imgurl"}
           />
           <label htmlFor="optiontype">Image Url</label>
         </div>
@@ -426,7 +426,7 @@ const QuestionsPopup = ({
             value="text&imgurl"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            defaultChecked={quizData.optiontype == "text&imgurl"}
+            checked={quizData.optiontype == "text&imgurl"}
           />
           <label htmlFor="optiontype">Text & Image Url</label>
         </div>
@@ -452,7 +452,7 @@ const QuestionsPopup = ({
                   name="correctoptionindex"
                   id={index}
                   onClick={correctoptionClick}
-                  defaultChecked={
+                  checked={
                     quizData.questions[selectedIndex].correctoptionindex ==
                     index
                   }

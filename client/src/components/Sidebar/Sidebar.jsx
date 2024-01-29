@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 const Sidebar = ({ click }) => {
   const navigate = useNavigate();
@@ -9,6 +10,16 @@ const Sidebar = ({ click }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    toast.success("Logout Successfully", {
+      position: "top-center",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     navigate("/");
   };
 

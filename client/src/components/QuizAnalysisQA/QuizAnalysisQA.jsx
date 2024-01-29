@@ -19,7 +19,7 @@ const QuizAnalysisQA = ({quizData}) => {
             <h2>Q.{index+1} {question.questiontext} </h2>
             <div className={styles.options_container}>
               <div>
-                <h1>{quizData.impression}</h1>
+                <h1>{question.attempt}</h1>
                 <p>People Attempted the question</p>
               </div>
               <div>
@@ -27,7 +27,7 @@ const QuizAnalysisQA = ({quizData}) => {
                 <p>People Answered Correctly</p>
               </div>
               <div>
-                <h1>{quizData.impression-question.correct}</h1>
+                <h1>{question.attempt-question.correct}</h1>
                 <p>People Answered Incorrectly</p>
               </div>
             </div>

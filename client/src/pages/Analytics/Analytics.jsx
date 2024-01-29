@@ -64,7 +64,7 @@ const Analytics = () => {
           <h1 className={styles.h1_tag}>Quiz Analysis</h1>
           <div className={styles.quiztable_container}>
             <table>
-              {allQuizzes.length && (
+              
                 <tr>
                   <th>S.No</th>
                   <th>Quiz Name</th>
@@ -73,7 +73,7 @@ const Analytics = () => {
                   <th></th>
                   <th></th>
                 </tr>
-              )}
+              
               {allQuizzes.map((quiz, index) => {
                 return (
                   <tr key={index}>
