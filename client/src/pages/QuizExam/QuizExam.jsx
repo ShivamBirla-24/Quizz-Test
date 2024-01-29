@@ -34,7 +34,7 @@ export const QuizExam = () => {
         }
       })();
     }
-  }, [])
+  }, [id])
 
   const handleNextQuestion = async () => {
     if (quizData.quiztype == "Q&A") {
