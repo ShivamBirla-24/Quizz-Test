@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "./QuizExam.module.css";
 import { useParams } from "react-router-dom";
+import trophyImage from "../../images/trophy.png";
+import Timer from "../../components/Timer/Timer.jsx";
 import axios from "axios"
 
 export const QuizExam = () => {
@@ -10,6 +12,8 @@ export const QuizExam = () => {
   const [currentQuestionindex, setcurrentQuestionindex] = useState(0);
   const [Questions, setQuestions] = useState([]);
   const [selectedOptionIndex, setselectedOptionIndex] = useState(null);
+  const [score, setScore] = useState(0);
+  const [showResult, setshowResult] = useState(false);
   
   useEffect(() => {
     if (id) {
@@ -36,6 +40,8 @@ export const QuizExam = () => {
     }
   }, [id])
 
+  
+
   const handleNextQuestion = async () => {
     if (quizData.quiztype == "Q&A") {
       if (selectedOptionIndex == Questions[currentQuestionindex].correctoptionindex) {
@@ -43,6 +49,7 @@ export const QuizExam = () => {
         newquestions[currentQuestionindex].attempt = Questions[currentQuestionindex].attempt + 1;
         newquestions[currentQuestionindex].correct = Questions[currentQuestionindex].correct + 1;
         await setQuestions(newquestions)
+        setScore(prev => prev + 1);
       } else {
         const newquestion = [...Questions];
         newquestion[currentQuestionindex].attempt = Questions[currentQuestionindex].attempt + 1;
@@ -73,6 +80,10 @@ export const QuizExam = () => {
     if(currentQuestionindex < Questions.length - 1){
       setcurrentQuestionindex((prev) => prev + 1);
     }
+
+    if (currentQuestionindex == Questions.length - 1) {
+      setshowResult(true);
+    }
     setselectedOptionIndex(null);
   }
 
@@ -83,13 +94,14 @@ export const QuizExam = () => {
   
   return (
     <div className={styles.main_container}>
-      {
+      {!showResult && (
         <div className={styles.quiz_container}>
+
           <div className={styles.header_container}>
             <p style={{ color: "black" }}>
               0{currentQuestionindex + 1}/0{Questions?.length}
             </p>
-            <p style={{ color: "red" }}>10 sec</p>
+            <p style={{ color: "red" }}><Timer timer={10}/></p>
           </div>
 
           <div className={styles.question_container}>
@@ -97,51 +109,82 @@ export const QuizExam = () => {
           </div>
 
           <div className={styles.options_container}>
-            {quizData?.optiontype == "text&imgurl" && (
-              Questions[currentQuestionindex]?.options?.map((option,index) => {
-                return (
-                  <div className={`${styles.option_textandimg} ${(selectedOptionIndex==index)&&styles.selected_option}`} key={index} id={index} onClick={handleOptionSelected}>
-                    <div id={index}>
-                      {option.optionText}
-                    </div>
-                    <img
-                      src={option.optionImage}
-                      alt="image"
-                      id={index}
-                    />
-                  </div>
-                );
-              })
-            )}
-            {quizData?.optiontype == "text" && (
+            {quizData?.optiontype == "text&imgurl" &&
               Questions[currentQuestionindex]?.options?.map((option, index) => {
                 return (
-                  <div className={`${styles.option_text} ${(selectedOptionIndex==index)&& styles.selected_option}`} key={index} id={index} onClick={handleOptionSelected}>
+                  <div
+                    className={`${styles.option_textandimg} ${
+                      selectedOptionIndex == index && styles.selected_option
+                    }`}
+                    key={index}
+                    id={index}
+                    onClick={handleOptionSelected}
+                  >
+                    <div id={index}>{option.optionText}</div>
+                    <img src={option.optionImage} alt="image" id={index} />
+                  </div>
+                );
+              })}
+            {quizData?.optiontype == "text" &&
+              Questions[currentQuestionindex]?.options?.map((option, index) => {
+                return (
+                  <div
+                    className={`${styles.option_text} ${
+                      selectedOptionIndex == index && styles.selected_option
+                    }`}
+                    key={index}
+                    id={index}
+                    onClick={handleOptionSelected}
+                  >
                     {option.optionText}
                   </div>
                 );
-              })
-            )}
-            {quizData?.optiontype == "imgurl" && (
+              })}
+            {quizData?.optiontype == "imgurl" &&
               Questions[currentQuestionindex]?.options?.map((option, index) => {
                 return (
-                  <div className={`${styles.option_img} ${(selectedOptionIndex==index)&&styles.selected_option}`} key={index} id={index} onClick={handleOptionSelected}>
-                    <img
-                      src={option.optionImage}
-                      alt="image"
-                      id={index}
-                    />
+                  <div
+                    className={`${styles.option_img} ${
+                      selectedOptionIndex == index && styles.selected_option
+                    }`}
+                    key={index}
+                    id={index}
+                    onClick={handleOptionSelected}
+                  >
+                    <img src={option.optionImage} alt="image" id={index} />
                   </div>
                 );
-              })
-            )}
+              })}
           </div>
 
           <div className={styles.footer_container}>
-            <button onClick={handleNextQuestion}>Next</button>
+            <button onClick={handleNextQuestion}>
+              {currentQuestionindex == Questions.length - 1 ? "Submit" : "Next"}
+            </button>
           </div>
         </div>
-      }
+      )}
+
+      {showResult && quizData.quiztype == "Poll" && (
+        <div className={styles.pollresult_container}>
+          <div>Thank you for participating in the Poll</div>
+        </div>
+      )}
+
+      {showResult && quizData.quiztype == "Q&A" && (
+        <div className={styles.QAresult_container}>
+          <div>
+            <p>Congrats Quiz is completed</p>
+            <img src={trophyImage} alt="trophy image" />
+            <p>
+              Your Score is{" "}
+              <span style={{ color: "#60B84B" }}>
+                0{score}/0{Questions.length}
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
