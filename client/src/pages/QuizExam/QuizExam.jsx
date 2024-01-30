@@ -14,6 +14,7 @@ export const QuizExam = () => {
   const [selectedOptionIndex, setselectedOptionIndex] = useState(null);
   const [score, setScore] = useState(0);
   const [showResult, setshowResult] = useState(false);
+  const [showTimer, setshowTimer] = useState(true);
   
   useEffect(() => {
     if (id) {
@@ -39,17 +40,31 @@ export const QuizExam = () => {
       })();
     }
   }, [id])
+  
+
+  useEffect(() => {
+    if (quizData?.timer) {
+      if (currentQuestionindex === Questions.length) {
+        clearInterval(questionInterval);
+      }
+      const questionInterval = setInterval(() => {
+        handleNextQuestion();
+      }, quizData.timer * 1000)
+      return () => clearInterval(questionInterval);
+    }
+  })
 
   
 
   const handleNextQuestion = async () => {
+    setshowTimer(false);
     if (quizData.quiztype == "Q&A") {
       if (selectedOptionIndex == Questions[currentQuestionindex].correctoptionindex) {
         const newquestions = [...Questions];
         newquestions[currentQuestionindex].attempt = Questions[currentQuestionindex].attempt + 1;
         newquestions[currentQuestionindex].correct = Questions[currentQuestionindex].correct + 1;
         await setQuestions(newquestions)
-        setScore(prev => prev + 1);
+        await setScore(prev => prev + 1);
       } else {
         const newquestion = [...Questions];
         newquestion[currentQuestionindex].attempt = Questions[currentQuestionindex].attempt + 1;
@@ -85,23 +100,32 @@ export const QuizExam = () => {
       setshowResult(true);
     }
     setselectedOptionIndex(null);
+    setshowTimer(true);
   }
+
 
   const handleOptionSelected = (e) => {
     const { id } = e.target;
-    setselectedOptionIndex(id);
+    if (selectedOptionIndex == id) {
+      setselectedOptionIndex(null);
+    } else {
+      setselectedOptionIndex(id);
+    }
   }
   
   return (
     <div className={styles.main_container}>
       {!showResult && (
         <div className={styles.quiz_container}>
-
           <div className={styles.header_container}>
             <p style={{ color: "black" }}>
               0{currentQuestionindex + 1}/0{Questions?.length}
             </p>
-            <p style={{ color: "red" }}><Timer timer={10}/></p>
+            {(quizData.timer && showTimer) ? (
+              <p style={{ color: "red" }}>
+                <Timer timer={quizData.timer} />
+              </p>
+            ):null}
           </div>
 
           <div className={styles.question_container}>
