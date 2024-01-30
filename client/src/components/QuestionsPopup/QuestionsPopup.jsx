@@ -12,7 +12,7 @@ const QuestionsPopup = ({
   setcreatequestionsPopup,
   setcreatequizPopup,
   editId,
-  editQuiz
+  editQuiz,
 }) => {
   const navigate = useNavigate();
   const [selectedIndex, setselectedIndex] = useState(0);
@@ -32,15 +32,15 @@ const QuestionsPopup = ({
             );
             if (response.status === 200) {
               const data = response.data;
-              setquizData({ ...data })
+              setquizData({ ...data });
             }
           } catch (error) {
             console.log(error);
           }
         }
       }
-    })()
-  },[editId,editQuiz,setquizData])
+    })();
+  }, [editId, editQuiz, setquizData]);
 
   //handling the state with index storing on question button click
   const handlequestionClick = (e) => {
@@ -72,7 +72,7 @@ const QuestionsPopup = ({
           },
         ],
       }));
-      setselectedIndex(prev=>prev+1);
+      setselectedIndex((prev) => prev + 1);
     }
   };
 
@@ -238,7 +238,8 @@ const QuestionsPopup = ({
             return option.optionImage.trim() !== "";
           } else if (quizData.optiontype === "text&imgurl") {
             return (
-              option.optionText.trim() !== "" && option.optionImage.trim() !== ""
+              option.optionText.trim() !== "" &&
+              option.optionImage.trim() !== ""
             );
           }
         })
@@ -275,7 +276,7 @@ const QuestionsPopup = ({
         setcreatequestionsPopup(false);
         setcreatequizPopup(false);
         setlinkId(
-          `http://localhost:5173/quizexam/${response.data.newquiz._id}`
+          `https://quizzie-cuvette.netlify.app/quizexam/${response.data.newquiz._id}`
         );
       }
     } catch (error) {
@@ -285,29 +286,31 @@ const QuestionsPopup = ({
   };
 
   //edit quiz handler
-  const handleEditquiz = async() => {
-      for (const question of quizData.questions) {
-        if (
-          !question.questiontext ||
-          !(quizData.quiztype == "Poll" ? 1 : (question.correctoptionindex==0 || question.correctoptionindex)) ||
-          !question.options.every((option) => {
-            if (quizData.optiontype === "text") {
-              return option.optionText.trim() !== "";
-            } else if (quizData.optiontype === "imgurl") {
-              return option.optionImage.trim() !== "";
-            } else if (quizData.optiontype === "text&imgurl") {
-              return (
-                option.optionText.trim() !== "" &&
-                option.optionImage.trim() !== ""
-              );
-            }
-          })
-        ){
-          toast.error("All the question fields are required");
-          return;
-        }
+  const handleEditquiz = async () => {
+    for (const question of quizData.questions) {
+      if (
+        !question.questiontext ||
+        !(quizData.quiztype == "Poll"
+          ? 1
+          : question.correctoptionindex == 0 || question.correctoptionindex) ||
+        !question.options.every((option) => {
+          if (quizData.optiontype === "text") {
+            return option.optionText.trim() !== "";
+          } else if (quizData.optiontype === "imgurl") {
+            return option.optionImage.trim() !== "";
+          } else if (quizData.optiontype === "text&imgurl") {
+            return (
+              option.optionText.trim() !== "" &&
+              option.optionImage.trim() !== ""
+            );
+          }
+        })
+      ) {
+        toast.error("All the question fields are required");
+        return;
       }
-      
+    }
+
     try {
       const response = await axios.patch(
         `https://quizzie-server-xjhc.onrender.com/api/quiz/editquiz/${editId}`,
@@ -321,7 +324,7 @@ const QuestionsPopup = ({
         }
       );
 
-      if(response.status == 200){
+      if (response.status == 200) {
         toast.success(response.data.message, {
           position: "top-center",
           autoClose: 4000,
@@ -332,18 +335,18 @@ const QuestionsPopup = ({
           progress: undefined,
           theme: "light",
         });
-        setcreatequizPopup(false)
-        setcreatequestionsPopup(false)
-        setsharePopup(true)
-        setlinkId(`http://localhost:5173/quizexam/${response.data.editedquiz._id}`)
+        setcreatequizPopup(false);
+        setcreatequestionsPopup(false);
+        setsharePopup(true);
+        setlinkId(
+          `https://quizzie-cuvette.netlify.app/quizexam/${response.data.editedquiz._id}`
+        );
       }
-
-    }catch(error){
+    } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
-      
-  }
+  };
 
   const handleOutsidePopup = (e) => {
     e.stopPropagation();
@@ -569,16 +572,21 @@ const QuestionsPopup = ({
           Cancel
         </button>
 
-        {
-          !editQuiz ?
-          (<button onClick={handleCreateQuiz} style={{ backgroundColor: "#60B84B", color: "white" }}>
+        {!editQuiz ? (
+          <button
+            onClick={handleCreateQuiz}
+            style={{ backgroundColor: "#60B84B", color: "white" }}
+          >
             Create Quiz
-          </button>) :
-          (<button onClick={handleEditquiz} style={{ backgroundColor: "#60B84B", color: "white" }}>
+          </button>
+        ) : (
+          <button
+            onClick={handleEditquiz}
+            style={{ backgroundColor: "#60B84B", color: "white" }}
+          >
             Edit Quiz
-          </button>)
-        }
-
+          </button>
+        )}
       </div>
     </div>
   );
@@ -589,7 +597,7 @@ QuestionsPopup.propTypes = {
   setcreatequestionsPopup: PropTypes.func.isRequired,
   setcreatequizPopup: PropTypes.func.isRequired,
   editId: PropTypes.string,
-  editQuiz:PropTypes.bool
+  editQuiz: PropTypes.bool,
 };
 
 export default QuestionsPopup;

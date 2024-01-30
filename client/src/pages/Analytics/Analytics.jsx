@@ -39,23 +39,25 @@ const Analytics = () => {
 
   const handleEdit = (e) => {
     navigate("/createquiz", { state: { edit: true, id: e.target.id } });
-  }
+  };
 
   const handleDelete = async (e) => {
     setdeletequizPopup(true);
-    setdeleteId(e.target.id)
-  }
+    setdeleteId(e.target.id);
+  };
 
   const handleShare = (e) => {
     const { id } = e.target;
-    navigator.clipboard.writeText(`http://localhost:5173/quizexam/${id}`)
+    navigator.clipboard
+      .writeText(`https://quizzie-cuvette.netlify.app/quizexam/${id}`)
       .then(() => {
-      toast.success("Link Copied to Clipboard!")
-      }).catch(() => {
-      toast.error("Error in copying the link");
-    })
-  }
-  
+        toast.success("Link Copied to Clipboard!");
+      })
+      .catch(() => {
+        toast.error("Error in copying the link");
+      });
+  };
+
   return (
     <>
       <div className={styles.main_container}>
@@ -64,16 +66,15 @@ const Analytics = () => {
           <h1 className={styles.h1_tag}>Quiz Analysis</h1>
           <div className={styles.quiztable_container}>
             <table>
-              
-                <tr>
-                  <th>S.No</th>
-                  <th>Quiz Name</th>
-                  <th>Created On</th>
-                  <th>Impression</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              
+              <tr>
+                <th>S.No</th>
+                <th>Quiz Name</th>
+                <th>Created On</th>
+                <th>Impression</th>
+                <th></th>
+                <th></th>
+              </tr>
+
               {allQuizzes.map((quiz, index) => {
                 return (
                   <tr key={index}>
@@ -121,7 +122,9 @@ const Analytics = () => {
                       </td>
                     </span>
                     <td>
-                      <Link to="/quizanalysis" state={{id:quiz._id}}>Question Wise Analysis</Link>
+                      <Link to="/quizanalysis" state={{ id: quiz._id }}>
+                        Question Wise Analysis
+                      </Link>
                     </td>
                   </tr>
                 );
