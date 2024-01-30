@@ -21,7 +21,7 @@ const Analytics = () => {
     (async function () {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/quiz/getallquizzes",
+          "https://quizzie-server-xjhc.onrender.com/api/quiz/getallquizzes",
           {
             headers: {
               "Content-Type": "application/json",

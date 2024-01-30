@@ -11,7 +11,7 @@ const Deletepopup = ({ deleteId, setdeletequizPopup }) => {
 
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/quiz/delete/${deleteId}`,
+        `https://quizzie-server-xjhc.onrender.com/api/quiz/delete/${deleteId}`,
         {
           headers: {
             "Content-Type": "application/json",

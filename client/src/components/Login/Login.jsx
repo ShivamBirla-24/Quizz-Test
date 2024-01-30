@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const API_ROOT_URL = "http://localhost:3000";
   const navigate = useNavigate();
 
   const [formData, setformData] = useState({
@@ -26,7 +25,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        API_ROOT_URL + "/api/auth/login",
+          "https://quizzie-server-xjhc.onrender.com/api/auth/login",
         formData
       );
       if (response.status === 200) {

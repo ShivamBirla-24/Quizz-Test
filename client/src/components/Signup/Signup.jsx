@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
  
-    const API_ROOT_URL = 'http://localhost:3000';
     const navigate = useNavigate();
 
     const [formData, setformData] = useState({
@@ -79,7 +78,10 @@ const Signup = () => {
           (formData.password === formData.confirmpassword)) {
           
              try {
-                 const response = await axios.post(API_ROOT_URL + "/api/auth/signup", formData);
+                 const response = await axios.post(
+                     "https://quizzie-server-xjhc.onrender.com/api/auth/signup",
+                   formData
+                 );
 
                  //saving token in local stoarge
                  localStorage.setItem("token", response.data.token);

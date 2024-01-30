@@ -27,7 +27,9 @@ const QuestionsPopup = ({
       if (editQuiz) {
         if (editId) {
           try {
-            const response = await axios.get(`http://localhost:3000/api/quiz/getaquiz/${editId}`)
+            const response = await axios.get(
+              `https://quizzie-server-xjhc.onrender.com/api/quiz/getaquiz/${editId}`
+            );
             if (response.status === 200) {
               const data = response.data;
               setquizData({ ...data })
@@ -248,7 +250,7 @@ const QuestionsPopup = ({
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/quiz/createquiz",
+        "https://quizzie-server-xjhc.onrender.com/api/quiz/createquiz",
         quizData,
         {
           headers: {
@@ -308,7 +310,7 @@ const QuestionsPopup = ({
       
     try {
       const response = await axios.patch(
-        `http://localhost:3000/api/quiz/editquiz/${editId}`,
+        `https://quizzie-server-xjhc.onrender.com/api/quiz/editquiz/${editId}`,
         quizData,
         {
           headers: {
