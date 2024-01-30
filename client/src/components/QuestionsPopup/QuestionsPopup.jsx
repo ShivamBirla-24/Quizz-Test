@@ -184,6 +184,7 @@ const QuestionsPopup = ({
     newquestions[selectedIndex] = {
       ...newquestions[selectedIndex],
       options: newoptions,
+      correctoptionindex:null
     };
     setquizData((prevquizData) => {
       return {
@@ -289,7 +290,7 @@ const QuestionsPopup = ({
     for (const question of quizData.questions) {
       if (
         !question?.questiontext ||
-        !(quizData?.quiztype == "Poll" ? 1 : question.correctoptionindex) ||
+        (quizData?.quiztype == "Q&A" && question?.correctoptionindex===null) ||
         !question?.options.every((option) => {
           if (quizData.optiontype === "text") {
             return option.optionText.trim() !== "";
