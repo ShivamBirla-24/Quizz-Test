@@ -40,7 +40,7 @@ const QuestionsPopup = ({
         }
       }
     })();
-  }, [editId, editQuiz, setquizData]);
+  }, [editId, editQuiz]);
 
   //handling the state with index storing on question button click
   const handlequestionClick = (e) => {
@@ -72,7 +72,6 @@ const QuestionsPopup = ({
           },
         ],
       }));
-      setselectedIndex((prev) => prev + 1);
     }
   };
 
@@ -229,8 +228,8 @@ const QuestionsPopup = ({
   const handleCreateQuiz = async () => {
     for (const question of quizData.questions) {
       if (
-        !question.questiontext ||
-        !(quizData.quiztype == "Poll" ? 1 : question.correctoptionindex) ||
+        !question?.questiontext ||
+        !(quizData?.quiztype == "Poll" ? 1 : question.correctoptionindex) ||
         !question.options.every((option) => {
           if (quizData.optiontype === "text") {
             return option.optionText.trim() !== "";
@@ -289,11 +288,11 @@ const QuestionsPopup = ({
   const handleEditquiz = async () => {
     for (const question of quizData.questions) {
       if (
-        !question.questiontext ||
-        !(quizData.quiztype == "Poll"
+        !question?.questiontext ||
+        !(quizData?.quiztype == "Poll"
           ? 1
-          : question.correctoptionindex == 0 || question.correctoptionindex) ||
-        !question.options.every((option) => {
+          : question?.correctoptionindex == 0 || question.correctoptionindex) ||
+        !question?.options.every((option) => {
           if (quizData.optiontype === "text") {
             return option.optionText.trim() !== "";
           } else if (quizData.optiontype === "imgurl") {
@@ -393,7 +392,7 @@ const QuestionsPopup = ({
         className={styles.questiontext_inputbox}
         placeholder="Question Text"
         name="questiontext"
-        value={quizData.questions[selectedIndex].questiontext}
+        value={quizData?.questions[selectedIndex]?.questiontext}
         onChange={handleQuestions}
       />
 
@@ -407,7 +406,7 @@ const QuestionsPopup = ({
             value="text"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            checked={quizData.optiontype == "text"}
+            checked={quizData?.optiontype == "text"}
           />
           <label htmlFor="optiontype">Text</label>
         </div>
@@ -419,7 +418,7 @@ const QuestionsPopup = ({
             value="imgurl"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            checked={quizData.optiontype == "imgurl"}
+            checked={quizData?.optiontype == "imgurl"}
           />
           <label htmlFor="optiontype">Image Url</label>
         </div>
@@ -431,7 +430,7 @@ const QuestionsPopup = ({
             value="text&imgurl"
             onChange={handleOptiontypes}
             className={styles.optiontype_radio}
-            checked={quizData.optiontype == "text&imgurl"}
+            checked={quizData?.optiontype == "text&imgurl"}
           />
           <label htmlFor="optiontype">Text & Image Url</label>
         </div>
@@ -439,7 +438,7 @@ const QuestionsPopup = ({
 
       <div className={styles.options_timer_div}>
         <div className={styles.options_div}>
-          {quizData.questions[selectedIndex].options.map((option, index) => (
+          {quizData?.questions[selectedIndex]?.options.map((option, index) => (
             <div
               key={index}
               style={{
@@ -450,7 +449,7 @@ const QuestionsPopup = ({
                 height: "16%",
               }}
             >
-              {quizData.quiztype == "Q&A" && (
+              {quizData?.quiztype == "Q&A" && (
                 <input
                   type="radio"
                   style={{ accentColor: "#60B84B" }}
@@ -463,8 +462,8 @@ const QuestionsPopup = ({
                   }
                 />
               )}
-              {(quizData.optiontype == "text" ||
-                quizData.optiontype == "text&imgurl") && (
+              {(quizData?.optiontype == "text" ||
+                quizData?.optiontype == "text&imgurl") && (
                 <input
                   type="text"
                   value={option.optionText}
@@ -480,8 +479,8 @@ const QuestionsPopup = ({
                   onChange={handleOptionChange}
                 />
               )}
-              {(quizData.optiontype == "imgurl" ||
-                quizData.optiontype == "text&imgurl") && (
+              {(quizData?.optiontype == "imgurl" ||
+                quizData?.optiontype == "text&imgurl") && (
                 <input
                   type="text"
                   value={option.optionImage}
@@ -498,7 +497,7 @@ const QuestionsPopup = ({
                 />
               )}
 
-              {quizData.questions[selectedIndex].options.length > 2 &&
+              {quizData?.questions[selectedIndex]?.options.length > 2 &&
                 index > 1 && (
                   <img
                     src={deleteIcon}
@@ -509,7 +508,7 @@ const QuestionsPopup = ({
                 )}
             </div>
           ))}
-          {quizData.questions[selectedIndex].options.length < 4 && (
+          {quizData?.questions[selectedIndex]?.options.length < 4 && (
             <button
               onClick={handleAddOptions}
               className={
@@ -522,7 +521,7 @@ const QuestionsPopup = ({
             </button>
           )}
         </div>
-        {quizData.quiztype == "Q&A" && (
+        {quizData?.quiztype == "Q&A" && (
           <div className={styles.timer_div}>
             <p>Timer</p>
             <button

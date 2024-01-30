@@ -25,7 +25,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-          "https://quizzie-server-xjhc.onrender.com/api/auth/login",
+        "https://quizzie-server-xjhc.onrender.com/api/auth/login",
         formData
       );
       if (response.status === 200) {

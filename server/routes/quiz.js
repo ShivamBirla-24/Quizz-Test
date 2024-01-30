@@ -57,7 +57,7 @@ router.patch("/editquiz/:id", isLoggedin, async (req, res) => {
       new: true,
       runValidators: true,
     });
-    
+
     if (editedquiz) {
       return res.status(200).json({
         message: "Quiz Edited Successfully",
@@ -152,46 +152,54 @@ router.get("/getaquiz/:id", async (req, res) => {
   }
 });
 
-//api for increasing impressions 
+//api for increasing impressions
 router.patch("/impression/:id", async (req, res) => {
   try {
     const { id } = req.params;
     if (id) {
-      const impresionupdate = await quizSchema.findByIdAndUpdate(id,{$inc:{impression:1}},{new:true});
+      const impresionupdate = await quizSchema.findByIdAndUpdate(
+        id,
+        { $inc: { impression: 1 } },
+        { new: true }
+      );
       res.status(200).json({
         message: "impression updated",
-      })
+      });
     } else {
       return res.status(404).json({
-        message:"Quiz Not Found"
-      })
+        message: "Quiz Not Found",
+      });
     }
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message:"Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-})
+});
 
 //api for increasing attempts(if attempted),correct,count(Poll)
-router.patch("/result/:id",async(req, res) => {
+router.patch("/result/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updatequestions = req.body;
     if (updatequestions) {
-      const updatedquiz = await quizSchema.findByIdAndUpdate(id, { questions: updatequestions }, { new: true });
+      const updatedquiz = await quizSchema.findByIdAndUpdate(
+        id,
+        { questions: updatequestions },
+        { new: true }
+      );
       res.status(200).json({
         message: "Quiz Updated",
-        updatedquiz
-      })
+        updatedquiz,
+      });
     }
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message:"Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-})
+});
 
 module.exports = router;

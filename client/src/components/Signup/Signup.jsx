@@ -79,7 +79,7 @@ const Signup = () => {
           
              try {
                  const response = await axios.post(
-                     "https://quizzie-server-xjhc.onrender.com/api/auth/signup",
+                   "https://quizzie-server-xjhc.onrender.com/api/auth/signup",
                    formData
                  );
 
