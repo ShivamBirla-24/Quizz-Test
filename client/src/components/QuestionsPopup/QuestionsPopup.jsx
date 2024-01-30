@@ -40,7 +40,7 @@ const QuestionsPopup = ({
         }
       }
     })();
-  }, [editId, editQuiz]);
+  }, []);
 
   //handling the state with index storing on question button click
   const handlequestionClick = (e) => {
