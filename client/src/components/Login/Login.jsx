@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
 
+  const [isLoading, setisLoading] = useState(false);
+
   const [formData, setformData] = useState({
     email: "",
     password: "",
@@ -24,6 +26,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      setisLoading(true);
       const response = await axios.post(
         "https://quizzie-server-xjhc.onrender.com/api/auth/login",
         formData
@@ -47,6 +50,7 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
+      setisLoading(false);
       toast.error(error.response.data.message, {
         position: "top-center",
         autoClose: 4000,
@@ -76,7 +80,9 @@ const Login = () => {
         />
       </div>
       <div className={styles.btn_div}>
-        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleLogin}>
+          {isLoading ? "Please Wait..." : "Login"}
+        </button>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Signup = () => {
  
     const navigate = useNavigate();
-
+    const [isLoading, setisLoading] = useState(false);
     const [formData, setformData] = useState({
         name: "",
         email: "",
@@ -37,16 +37,16 @@ const Signup = () => {
     
     
   //On submit button functionality 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
       e.preventDefault()
-
+       
       setconfirmpassError(false);
       setemailError(false);
       setnameError(false);
       setpassError(false);
       
       if(!isValid(/^[a-zA-Z-' ]+$/, formData.name)){
-          setnameError(true); 
+        setnameError(true); 
       }
       if (!isValid(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, formData.email)) {
         setemailError(true);
@@ -69,7 +69,7 @@ const Signup = () => {
             progress: undefined,
             theme: "light",
           });
-
+        return;
       }
       
       if (isValid(/^[a-zA-Z-' ]+$/, formData.name) && 
@@ -77,7 +77,8 @@ const Signup = () => {
           isValid(/^.{8,}$/, formData.password) && 
           (formData.password === formData.confirmpassword)) {
           
-             try {
+            try {
+                setisLoading(true);
                  const response = await axios.post(
                    "https://quizzie-server-xjhc.onrender.com/api/auth/signup",
                    formData
@@ -101,8 +102,9 @@ const Signup = () => {
                  //directly navigate to dashboard after register
                  navigate("/dashboard");
 
-             } catch (error) {
-                 console.log(error);
+            } catch (error) {
+                setisLoading(false);
+                console.log(error);
                 toast.error(error.response.data.message, {
                   position: "top-center",
                   autoClose: 4000,
@@ -145,7 +147,7 @@ const Signup = () => {
         {confirmpassError?<p>password does not match</p>:""}
       </div>
       <div className={styles.btn_div}>
-        <button onClick={handleSubmit}>Sign Up</button>
+          <button onClick={handleSubmit}>{(isLoading)?"Please Wait...":"Sign up"}</button>
       </div>
     </div>
   );
